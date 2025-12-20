@@ -1,12 +1,8 @@
 <resources>
     <string name="app_name">Multisearch</string>
-    <string name="search_hint_media">Search for any media</string>
-    <string name="search_hint_song">Search for a song</string>
-    <string name="search_hint_game">Search for a game</string>
     <string name="search_button_media">Search Media</string>
     <string name="search_button_song">Search Song</string>
     <string name="search_button_game">Search Game</string>
-    <string name="search">Search</string>
     <string name="search_for_a_game">Search for a game</string>
     <string name="search_for_a_song">Search for a song</string>
     <string name="search_for_any_media">Search for any media</string>
