@@ -1,11 +1,9 @@
-import com.android.build.api.dsl.ApplicationExtension
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.sonar)
 }
 
-configure<ApplicationExtension> {
+android {
     namespace = "com.example.multisearch"
     compileSdk = 36
 
