@@ -6,7 +6,6 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import java.net.URLEncoder
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,10 +53,11 @@ class MainActivity : AppCompatActivity() {
         if (searchValue.isBlank()) return
 
         for (website in websites) {
-            val encodedSearchValue = URLEncoder.encode(searchValue, "UTF-8")
-            val finalUrl = website + encodedSearchValue
-            val intent = Intent(Intent.ACTION_VIEW, finalUrl.toUri())
-            startActivity(intent)
+            val finalUrl = SearchHelper.createUrl(website, searchValue)
+            if (finalUrl.isNotEmpty()) {
+                val intent = Intent(Intent.ACTION_VIEW, finalUrl.toUri())
+                startActivity(intent)
+            }
         }
     }
 }
