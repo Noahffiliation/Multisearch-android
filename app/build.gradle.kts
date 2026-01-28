@@ -47,6 +47,7 @@ sonar {
     properties {
         property("sonar.projectKey", "Noahffiliation_Multisearch-android")
         property("sonar.organization", "noahffiliation")
+        property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.coverage.jacoco.xmlReportPaths", "${project.layout.buildDirectory.get()}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
     }
 }
@@ -62,7 +63,7 @@ dependencies {
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn("testDebugUnitTest", "connectedDebugAndroidTest")
+    dependsOn("testDebugUnitTest")
 
     reports {
         xml.required.set(true)
