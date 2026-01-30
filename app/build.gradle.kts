@@ -46,6 +46,14 @@ android {
     }
 }
 
+// Force the protobuf version to fix the security vulnerability (CVE-2024-7254)
+configurations.all {
+    resolutionStrategy {
+        force(libs.protobuf.kotlin)
+        force(libs.protobuf.java)
+    }
+}
+
 // Configure all test tasks to work with JaCoCo/Robolectric
 tasks.withType<Test>().configureEach {
     extensions.findByType<JacocoTaskExtension>()?.apply {
