@@ -10,6 +10,7 @@ sonar = "7.2.2.6593"
 robolectric = "4.16.1"
 protobuf = "4.33.5"
 jdom = "2.0.6.1"
+netty = "4.1.124.Final"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -23,6 +24,7 @@ robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "
 protobuf-kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
 protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
 jdom2 = { group = "org.jdom", name = "jdom2", version.ref = "jdom" }
+netty-codec-http2 = { group = "io.netty", name = "netty-codec-http2", version.ref = "netty" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -8,6 +8,7 @@ buildscript {
             force(libs.protobuf.java)
             force(libs.protobuf.kotlin)
             force(libs.jdom2)
+            force(libs.netty.codec.http2)
         }
     }
 }
