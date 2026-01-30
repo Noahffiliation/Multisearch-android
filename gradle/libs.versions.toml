@@ -9,6 +9,7 @@ material = "1.13.0"
 sonar = "7.2.2.6593"
 robolectric = "4.16.1"
 protobuf = "4.33.5"
+jdom = "2.0.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -21,6 +22,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 protobuf-kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
 protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
+jdom2 = { group = "org.jdom", name = "jdom2", version.ref = "jdom" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

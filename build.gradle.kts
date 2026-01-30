@@ -5,8 +5,9 @@ buildscript {
     }
     configurations.all {
         resolutionStrategy {
-            force("com.google.protobuf:protobuf-java:4.33.5")
-            force("com.google.protobuf:protobuf-kotlin:4.33.5")
+            force(libs.protobuf.java)
+            force(libs.protobuf.kotlin)
+            force(libs.jdom2)
         }
     }
 }
