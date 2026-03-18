@@ -53,6 +53,7 @@ configurations.all {
         force(libs.jdom2)
         force(libs.netty.common)
         force(libs.netty.handler)
+        force(libs.netty.codec)
         force(libs.netty.codec.http)
         force(libs.netty.codec.http2)
         force(libs.jose4j)

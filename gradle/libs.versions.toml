@@ -10,7 +10,7 @@ sonar = "7.2.3.7755"
 robolectric = "4.16.1"
 protobuf = "4.34.0"
 jdom = "2.0.6.1"
-netty = "4.2.10.Final"
+netty = "4.1.125.Final"
 jose4j = "0.9.6"
 commonsLang3 = "3.20.0"
 httpclient = "4.5.14"
@@ -29,6 +29,7 @@ protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version
 jdom2 = { group = "org.jdom", name = "jdom2", version.ref = "jdom" }
 netty-common = { group = "io.netty", name = "netty-common", version.ref = "netty" }
 netty-handler = { group = "io.netty", name = "netty-handler", version.ref = "netty" }
+netty-codec = { group = "io.netty", name = "netty-codec", version.ref = "netty" }
 netty-codec-http = { group = "io.netty", name = "netty-codec-http", version.ref = "netty" }
 netty-codec-http2 = { group = "io.netty", name = "netty-codec-http2", version.ref = "netty" }
 jose4j = { group = "org.bitbucket.b_c", name = "jose4j", version.ref = "jose4j" }
