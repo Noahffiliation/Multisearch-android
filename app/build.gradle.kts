@@ -4,6 +4,10 @@ plugins {
     jacoco
 }
 
+dependencyLocking {
+    lockAllConfigurations()
+}
+
 android {
     namespace = "com.example.multisearch"
     compileSdk = 37
