@@ -60,9 +60,14 @@ configurations.all {
         force(libs.netty.codec)
         force(libs.netty.codec.http)
         force(libs.netty.codec.http2)
+        force(libs.netty.handler.proxy)
+        force(libs.netty.codec.socks)
         force(libs.jose4j)
         force(libs.commons.lang3)
         force(libs.httpclient)
+        force(libs.bcprov.jdk18on)
+        force(libs.bcpkix.jdk18on)
+        force(libs.bcutil.jdk18on)
     }
 }
 
@@ -77,9 +82,14 @@ tasks.withType<Test>().configureEach {
 sonar {
     properties {
         property("sonar.projectKey", "Noahffiliation_Multisearch-android")
+        property("sonar.projectName", "Multisearch-android")
         property("sonar.organization", "noahffiliation")
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.coverage.jacoco.xmlReportPaths", "${project.layout.buildDirectory.get()}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
+        // SonarCloud reads SONAR_TOKEN automatically; set it in CI and locally (do not rely on .gradle/config.properties).
+        providers.environmentVariable("SONAR_TOKEN").orNull?.takeIf { it.isNotBlank() }?.let {
+            property("sonar.token", it)
+        }
     }
 }
 
