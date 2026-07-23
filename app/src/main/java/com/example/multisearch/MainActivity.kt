@@ -1,10 +1,11 @@
 package com.example.multisearch
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsClient
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 
 class MainActivity : AppCompatActivity() {
@@ -29,9 +30,15 @@ class MainActivity : AppCompatActivity() {
         val searchValue = searchEditText.text.toString()
         val urls = SearchHelper.getUrlsForCategory(category, searchValue)
 
+        val browserPackage = CustomTabsClient.getPackageName(this, null)
+        val customTabsIntent = CustomTabsIntent.Builder().build()
+
         for (url in urls) {
-            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-            startActivity(intent)
+            val uri = url.toUri()
+            if (browserPackage != null) {
+                customTabsIntent.intent.setPackage(browserPackage)
+            }
+            customTabsIntent.launchUrl(this, uri)
         }
     }
 }
