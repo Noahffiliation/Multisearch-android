@@ -50,6 +50,7 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
+          tools: latest
 
       - name: Compile source code for CodeQL
         if: matrix.build-mode == 'manual'
