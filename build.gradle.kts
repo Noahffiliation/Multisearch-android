@@ -20,6 +20,7 @@ buildscript {
             force(libs.bcprov.jdk18on)
             force(libs.bcpkix.jdk18on)
             force(libs.bcutil.jdk18on)
+            force(libs.kotlin.gradle.plugin)
         }
     }
 }
