@@ -23,6 +23,12 @@ object SearchHelper {
         "https://store.playstation.com/en-us/search/"
     )
 
+    private val categoryMap = mapOf(
+        "media" to mediaWebsites,
+        "song" to songWebsites,
+        "game" to gameWebsites
+    )
+
     fun createUrl(baseUrl: String, query: String): String {
         val trimmedQuery = query.trim()
         if (trimmedQuery.isEmpty()) return ""
@@ -32,12 +38,7 @@ object SearchHelper {
 
     fun getUrlsForCategory(category: String, query: String): List<String> {
         if (query.isBlank()) return emptyList()
-        val websites = when (category) {
-            "media" -> mediaWebsites
-            "song" -> songWebsites
-            "game" -> gameWebsites
-            else -> return emptyList()
-        }
+        val websites = categoryMap[category] ?: return emptyList()
         return websites.map { createUrl(it, query) }
     }
 }
