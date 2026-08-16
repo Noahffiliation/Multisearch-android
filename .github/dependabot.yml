@@ -4,18 +4,25 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "deps:"
+    labels:
+      - "dependencies"
+      - "android"
     groups:
       gradle-dependencies:
         patterns:
           - "*"
-        update-types:
-          - "minor"
-          - "patch"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "ci:"
+    labels:
+      - "dependencies"
+      - "ci/cd"
     groups:
       github-actions:
         patterns:
