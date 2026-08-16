@@ -86,9 +86,33 @@ sonar {
         property("sonar.projectName", "Multisearch-android")
         property("sonar.organization", "noahffiliation")
         property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.sourceEncoding", "UTF-8")
+        property(
+            "sonar.exclusions",
+            listOf(
+                "**/*.webp",
+                "**/*.png",
+                "**/*.jpg",
+                "**/*.jpeg",
+                "**/*.gif",
+                "**/*.ico",
+                "**/*.bin",
+                "**/*.aar",
+                "**/*.jar"
+            ).joinToString(",")
+        )
         property("sonar.coverage.jacoco.xmlReportPaths", "${project.layout.buildDirectory.get()}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
-        // SonarCloud reads SONAR_TOKEN automatically; set it in CI and locally (do not rely on .gradle/config.properties).
-        providers.environmentVariable("SONAR_TOKEN").orNull?.takeIf { it.isNotBlank() }?.let {
+        // SonarCloud reads SONAR_TOKEN automatically; set it in CI and locally (or via workspace .env).
+        val envFile = rootProject.file(".env")
+        val envToken = if (envFile.exists()) {
+            envFile.readLines()
+                .firstOrNull { it.trimStart().startsWith("SONAR_TOKEN=") }
+                ?.substringAfter("SONAR_TOKEN=")
+                ?.trim('"', '\'', ' ', '\r', '\n')
+        } else null
+
+        val token = providers.environmentVariable("SONAR_TOKEN").orNull ?: envToken
+        token?.takeIf { it.isNotBlank() }?.let {
             property("sonar.token", it)
         }
     }
