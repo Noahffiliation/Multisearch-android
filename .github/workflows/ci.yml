@@ -27,6 +27,10 @@ permissions:
 
 jobs:
   android-ci:
+    permissions:
+      contents: read
+      packages: write
+      security-events: write
     uses: Noahffiliation/.github/.github/workflows/reusable-android-ci.yml@main
     with:
       java-version: "21"
