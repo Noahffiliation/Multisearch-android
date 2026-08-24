@@ -16,6 +16,7 @@ commonsLang3 = "3.20.0"
 httpclient = "4.5.14"
 bouncycastle = "1.85"
 kotlin = "2.4.10"
+spotless = "7.0.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,3 +48,4 @@ bcutil-jdk18on = { group = "org.bouncycastle", name = "bcutil-jdk18on", version.
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 sonar = { id = "org.sonarqube", version.ref = "sonar" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

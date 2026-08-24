@@ -9,7 +9,6 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 
 class MainActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -26,7 +25,10 @@ class MainActivity : AppCompatActivity() {
         gameButton.setOnClickListener { openTabs("game", gameSearch) }
     }
 
-    private fun openTabs(category: String, searchEditText: EditText) {
+    private fun openTabs(
+        category: String,
+        searchEditText: EditText,
+    ) {
         val searchValue = searchEditText.text.toString()
         val urls = SearchHelper.getUrlsForCategory(category, searchValue)
 

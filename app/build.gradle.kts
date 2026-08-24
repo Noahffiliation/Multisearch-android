@@ -28,7 +28,7 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
         getByName("debug") {
@@ -98,18 +98,25 @@ sonar {
                 "**/*.ico",
                 "**/*.bin",
                 "**/*.aar",
-                "**/*.jar"
-            ).joinToString(",")
+                "**/*.jar",
+            ).joinToString(","),
         )
-        property("sonar.coverage.jacoco.xmlReportPaths", "${project.layout.buildDirectory.get()}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
+        property(
+            "sonar.coverage.jacoco.xmlReportPaths",
+            "${project.layout.buildDirectory.get()}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml",
+        )
         // SonarCloud reads SONAR_TOKEN automatically; set it in CI and locally (or via workspace .env).
         val envFile = rootProject.file(".env")
-        val envToken = if (envFile.exists()) {
-            envFile.readLines()
-                .firstOrNull { it.trimStart().startsWith("SONAR_TOKEN=") }
-                ?.substringAfter("SONAR_TOKEN=")
-                ?.trim('"', '\'', ' ', '\r', '\n')
-        } else null
+        val envToken =
+            if (envFile.exists()) {
+                envFile
+                    .readLines()
+                    .firstOrNull { it.trimStart().startsWith("SONAR_TOKEN=") }
+                    ?.substringAfter("SONAR_TOKEN=")
+                    ?.trim('"', '\'', ' ', '\r', '\n')
+            } else {
+                null
+            }
 
         val token = providers.environmentVariable("SONAR_TOKEN").orNull ?: envToken
         token?.takeIf { it.isNotBlank() }?.let {
@@ -143,24 +150,33 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         html.required.set(true)
     }
 
-    val fileFilter = listOf(
-        "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
-        "**/*Test*.*", "android/**/*.*"
-    )
+    val fileFilter =
+        listOf(
+            "**/R.class",
+            "**/R$*.class",
+            "**/BuildConfig.*",
+            "**/Manifest*.*",
+            "**/*Test*.*",
+            "android/**/*.*",
+        )
 
-    val javaClasses = fileTree("${project.layout.buildDirectory.get()}/intermediates/javac/debug/classes") {
-        exclude(fileFilter)
-    }
-    val kotlinClasses = fileTree("${project.layout.buildDirectory.get()}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes") {
-        exclude(fileFilter)
-    }
+    val javaClasses =
+        fileTree("${project.layout.buildDirectory.get()}/intermediates/javac/debug/classes") {
+            exclude(fileFilter)
+        }
+    val kotlinClasses =
+        fileTree("${project.layout.buildDirectory.get()}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes") {
+            exclude(fileFilter)
+        }
 
     val mainSrc = "${project.projectDir}/src/main/java"
 
     sourceDirectories.setFrom(files(mainSrc))
     classDirectories.setFrom(files(javaClasses, kotlinClasses))
-    executionData.setFrom(fileTree(project.layout.buildDirectory.get()) {
-        include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec")
-        include("outputs/code_coverage/debugAndroidTest/connected/*coverage.ec")
-    })
+    executionData.setFrom(
+        fileTree(project.layout.buildDirectory.get()) {
+            include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec")
+            include("outputs/code_coverage/debugAndroidTest/connected/*coverage.ec")
+        },
+    )
 }

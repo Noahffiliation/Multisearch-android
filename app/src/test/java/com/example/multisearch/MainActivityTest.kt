@@ -7,7 +7,6 @@ import android.content.pm.ResolveInfo
 import android.content.pm.ServiceInfo
 import android.widget.Button
 import android.widget.EditText
-import androidx.browser.customtabs.CustomTabsService
 import androidx.core.net.toUri
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
@@ -19,7 +18,6 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasPackage
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.Matchers.allOf
 import org.junit.After
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -30,7 +28,6 @@ import org.robolectric.annotation.Config
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [34]) // Robolectric supports up to SDK 34/35
 class MainActivityTest {
-
     @Before
     fun setUp() {
         Intents.init()
@@ -51,10 +48,12 @@ class MainActivityTest {
                 editText.setText("Inception")
                 button.performClick()
 
-                intended(allOf(
-                    hasAction(Intent.ACTION_VIEW),
-                    hasData("https://letterboxd.com/search/Inception")
-                ))
+                intended(
+                    allOf(
+                        hasAction(Intent.ACTION_VIEW),
+                        hasData("https://letterboxd.com/search/Inception"),
+                    ),
+                )
             }
         }
     }
@@ -65,46 +64,52 @@ class MainActivityTest {
         val appContext = ApplicationProvider.getApplicationContext<Context>()
         val packageManager = shadowOf(appContext.packageManager)
 
-        val appInfo = android.content.pm.ApplicationInfo().apply {
-            packageName = "com.android.chrome"
-            flags = android.content.pm.ApplicationInfo.FLAG_INSTALLED
-        }
-        val pkgInfo = android.content.pm.PackageInfo().apply {
-            packageName = "com.android.chrome"
-            applicationInfo = appInfo
-        }
+        val appInfo =
+            android.content.pm.ApplicationInfo().apply {
+                packageName = "com.android.chrome"
+                flags = android.content.pm.ApplicationInfo.FLAG_INSTALLED
+            }
+        val pkgInfo =
+            android.content.pm.PackageInfo().apply {
+                packageName = "com.android.chrome"
+                applicationInfo = appInfo
+            }
         packageManager.installPackage(pkgInfo)
 
-        val serviceResolveInfo = ResolveInfo().apply {
-            serviceInfo = ServiceInfo().apply {
-                packageName = "com.android.chrome"
-                name = "com.android.chrome.CustomTabsService"
-                applicationInfo = appInfo
+        val serviceResolveInfo =
+            ResolveInfo().apply {
+                serviceInfo =
+                    ServiceInfo().apply {
+                        packageName = "com.android.chrome"
+                        name = "com.android.chrome.CustomTabsService"
+                        applicationInfo = appInfo
+                    }
             }
-        }
-        val activityResolveInfo = ResolveInfo().apply {
-            activityInfo = ActivityInfo().apply {
-                packageName = "com.android.chrome"
-                name = "com.android.chrome.Main"
-                applicationInfo = appInfo
+        val activityResolveInfo =
+            ResolveInfo().apply {
+                activityInfo =
+                    ActivityInfo().apply {
+                        packageName = "com.android.chrome"
+                        name = "com.android.chrome.Main"
+                        applicationInfo = appInfo
+                    }
             }
-        }
 
         packageManager.addResolveInfoForIntent(
             Intent("android.support.customtabs.action.CustomTabsService"),
-            serviceResolveInfo
+            serviceResolveInfo,
         )
         packageManager.addResolveInfoForIntent(
             Intent("android.support.customtabs.action.CustomTabsService").setPackage("com.android.chrome"),
-            serviceResolveInfo
+            serviceResolveInfo,
         )
         packageManager.addResolveInfoForIntent(
             Intent(Intent.ACTION_VIEW, "http://www.example.com".toUri()),
-            activityResolveInfo
+            activityResolveInfo,
         )
         packageManager.addResolveInfoForIntent(
             Intent(Intent.ACTION_VIEW, "http://".toUri()),
-            activityResolveInfo
+            activityResolveInfo,
         )
 
         ActivityScenario.launch(MainActivity::class.java).use { scenario ->
@@ -115,11 +120,13 @@ class MainActivityTest {
                 editText.setText("Inception")
                 button.performClick()
 
-                intended(allOf(
-                    hasAction(Intent.ACTION_VIEW),
-                    hasData("https://letterboxd.com/search/Inception"),
-                    hasPackage("com.android.chrome")
-                ))
+                intended(
+                    allOf(
+                        hasAction(Intent.ACTION_VIEW),
+                        hasData("https://letterboxd.com/search/Inception"),
+                        hasPackage("com.android.chrome"),
+                    ),
+                )
             }
         }
     }
@@ -134,10 +141,12 @@ class MainActivityTest {
                 editText.setText("Stay")
                 button.performClick()
 
-                intended(allOf(
-                    hasAction(Intent.ACTION_VIEW),
-                    hasData("https://www.enchor.us/?name=Stay")
-                ))
+                intended(
+                    allOf(
+                        hasAction(Intent.ACTION_VIEW),
+                        hasData("https://www.enchor.us/?name=Stay"),
+                    ),
+                )
             }
         }
     }
@@ -152,10 +161,12 @@ class MainActivityTest {
                 editText.setText("Doom")
                 button.performClick()
 
-                intended(allOf(
-                    hasAction(Intent.ACTION_VIEW),
-                    hasData("https://www.backloggd.com/search/games/Doom")
-                ))
+                intended(
+                    allOf(
+                        hasAction(Intent.ACTION_VIEW),
+                        hasData("https://www.backloggd.com/search/games/Doom"),
+                    ),
+                )
             }
         }
     }
