@@ -27,6 +27,7 @@ permissions:
 
 jobs:
   android-ci:
+    if: github.actor != 'dependabot[bot]'
     permissions:
       contents: read
       packages: write
