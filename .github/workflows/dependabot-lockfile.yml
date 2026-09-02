@@ -26,7 +26,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@346a44564f803579f2a9d82d6570fa5c56d80eff
+        uses: gradle/actions/setup-gradle@a27deee331cfb157dfcf8de274f4874dd23b730c
 
       - name: Regenerate Gradle lockfiles
         run: ./gradlew --write-locks :dependencies :app:dependencies lintDebug testDebugUnitTest
