@@ -5,7 +5,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SearchHelperTest {
-
     @Test
     fun createUrl_encodesQueryCorrectly() {
         val baseUrl = "https://example.com/search?q="
