@@ -13,3 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+.vscode/
+.env
+workflow.sh
+artifacts/
+.scannerwork/

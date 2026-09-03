@@ -1,16 +1,21 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.sonar)
+    jacoco
+}
+
+dependencyLocking {
+    lockAllConfigurations()
 }
 
 android {
     namespace = "com.example.multisearch"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.example.multisearch"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
@@ -19,25 +24,159 @@ android {
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = true // Enables code shrinking
-            isShrinkResources = true // Removes unused resources
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
+        }
+        getByName("debug") {
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
         }
     }
 }
 
-kotlin {
-    jvmToolchain(11)
+configurations.all {
+    resolutionStrategy {
+        force(libs.protobuf.java)
+        force(libs.protobuf.kotlin)
+        force(libs.jdom2)
+        force(libs.netty.common)
+        force(libs.netty.handler)
+        force(libs.netty.codec)
+        force(libs.netty.codec.http)
+        force(libs.netty.codec.http2)
+        force(libs.netty.handler.proxy)
+        force(libs.netty.codec.socks)
+        force(libs.jose4j)
+        force(libs.commons.lang3)
+        force(libs.httpclient)
+        force(libs.bcprov.jdk18on)
+        force(libs.bcpkix.jdk18on)
+        force(libs.bcutil.jdk18on)
+        force(libs.kotlin.gradle.plugin)
+    }
+}
+
+// Configure all test tasks to work with JaCoCo/Robolectric
+tasks.withType<Test>().configureEach {
+    extensions.findByType<JacocoTaskExtension>()?.apply {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
+    }
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "Noahffiliation_Multisearch-android")
+        property("sonar.projectName", "Multisearch-android")
+        property("sonar.organization", "noahffiliation")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.sourceEncoding", "UTF-8")
+        property(
+            "sonar.exclusions",
+            listOf(
+                "**/*.webp",
+                "**/*.png",
+                "**/*.jpg",
+                "**/*.jpeg",
+                "**/*.gif",
+                "**/*.ico",
+                "**/*.bin",
+                "**/*.aar",
+                "**/*.jar",
+            ).joinToString(","),
+        )
+        property(
+            "sonar.coverage.jacoco.xmlReportPaths",
+            "${project.layout.buildDirectory.get()}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml",
+        )
+        // SonarCloud reads SONAR_TOKEN automatically; set it in CI and locally (or via workspace .env).
+        val envFile = rootProject.file(".env")
+        val envToken =
+            if (envFile.exists()) {
+                envFile
+                    .readLines()
+                    .firstOrNull { it.trimStart().startsWith("SONAR_TOKEN=") }
+                    ?.substringAfter("SONAR_TOKEN=")
+                    ?.trim('"', '\'', ' ', '\r', '\n')
+            } else {
+                null
+            }
+
+        val token = providers.environmentVariable("SONAR_TOKEN").orNull ?: envToken
+        token?.takeIf { it.isNotBlank() }?.let {
+            property("sonar.token", it)
+        }
+    }
 }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    implementation(libs.androidx.browser)
     testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.junit)
+    testImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.androidx.espresso.intents)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.intents)
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    group = "Reporting"
+    description = "Generate JaCoCo coverage reports."
+
+    dependsOn("testDebugUnitTest")
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    val fileFilter =
+        listOf(
+            "**/R.class",
+            "**/R$*.class",
+            "**/BuildConfig.*",
+            "**/Manifest*.*",
+            "**/*Test*.*",
+            "android/**/*.*",
+        )
+
+    val javaClasses =
+        fileTree("${project.layout.buildDirectory.get()}/intermediates/javac/debug/classes") {
+            exclude(fileFilter)
+        }
+    val kotlinClasses =
+        fileTree("${project.layout.buildDirectory.get()}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes") {
+            exclude(fileFilter)
+        }
+
+    val mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(javaClasses, kotlinClasses))
+    executionData.setFrom(
+        fileTree(project.layout.buildDirectory.get()) {
+            include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec")
+            include("outputs/code_coverage/debugAndroidTest/connected/*coverage.ec")
+        },
+    )
 }

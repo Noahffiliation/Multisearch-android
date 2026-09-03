@@ -1,0 +1,53 @@
+package com.example.multisearch
+
+import java.net.URLEncoder
+
+object SearchHelper {
+    val mediaWebsites =
+        listOf(
+            "https://letterboxd.com/search/",
+            "https://app.trakt.tv/search?m=media&q=",
+            "https://myanimelist.net/search/all?q=",
+            "https://mydramalist.com/search?q=",
+        )
+
+    val songWebsites =
+        listOf(
+            "https://www.enchor.us/?name=",
+            "https://beatsaver.com/?q=",
+        )
+
+    val gameWebsites =
+        listOf(
+            "https://www.notion.so/noahffiliation/61f7093e99ed455fb4e497d2da55873f?v=10901b25e6fa41be83893d27b81a58c9",
+            "https://www.backloggd.com/search/games/",
+            "https://store.steampowered.com/search/?term=",
+            "https://store.playstation.com/en-us/search/",
+        )
+
+    private val categoryMap =
+        mapOf(
+            "media" to mediaWebsites,
+            "song" to songWebsites,
+            "game" to gameWebsites,
+        )
+
+    fun createUrl(
+        baseUrl: String,
+        query: String,
+    ): String {
+        val trimmedQuery = query.trim()
+        if (trimmedQuery.isEmpty()) return ""
+        val encodedQuery = URLEncoder.encode(trimmedQuery, "UTF-8")
+        return baseUrl + encodedQuery
+    }
+
+    fun getUrlsForCategory(
+        category: String,
+        query: String,
+    ): List<String> {
+        if (query.isBlank()) return emptyList()
+        val websites = categoryMap[category] ?: return emptyList()
+        return websites.map { createUrl(it, query) }
+    }
+}
