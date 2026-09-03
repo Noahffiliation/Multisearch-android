@@ -2,62 +2,27 @@ name: "CodeQL Advanced"
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '17 3 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write
 
 jobs:
-  analyze:
-    name: Analyze (${{ matrix.language }})
-    runs-on: ubuntu-latest
+  security-scan:
     permissions:
-      security-events: write
-      packages: read
-      actions: read
       contents: read
-
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - language: java-kotlin
-            build-mode: manual
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'oracle'
-          java-version: '21'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4
-        with:
-          languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build-mode }}
-          tools: latest
-
-      - name: Compile source code for CodeQL
-        if: matrix.build-mode == 'manual'
-        shell: bash
-        run: ./gradlew compileDebugKotlin compileDebugJavaWithJavac
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4
-        with:
-          category: "/language:${{ matrix.language }}"
+      security-events: write
+    uses: Noahffiliation/.github/.github/workflows/reusable-codeql.yml@main
+    with:
+      language: "java-kotlin"
+      build-mode: "manual"
+      build-command: "./gradlew assembleDebug --no-build-cache --no-daemon"
