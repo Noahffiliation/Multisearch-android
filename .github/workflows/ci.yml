@@ -32,7 +32,7 @@ jobs:
       contents: read
       packages: write
       security-events: write
-    uses: Noahffiliation/.github/.github/workflows/reusable-android-ci.yml@main
+    uses: Noahffiliation/.github/.github/workflows/reusable-android-ci.yml@b156c12177fb356641cfd43e37e7e669d1860374 # v1.0.0
     with:
       java-version: "21"
     secrets:
