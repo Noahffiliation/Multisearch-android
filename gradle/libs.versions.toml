@@ -16,7 +16,7 @@ commonsLang3 = "3.21.0"
 httpclient = "4.5.14"
 bouncycastle = "1.86"
 bcprov = "1.86"
-kotlin = "2.4.20"
+kotlin = "2.4.21"
 spotless = "8.10.4"
 
 [libraries]
