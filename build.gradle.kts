@@ -21,6 +21,7 @@ buildscript {
             force(libs.bcpkix.jdk18on)
             force(libs.bcutil.jdk18on)
             force(libs.kotlin.gradle.plugin)
+            force(libs.guava)
         }
     }
 }
@@ -33,25 +34,51 @@ plugins {
 }
 
 spotless {
+    val commonExcludes =
+        listOf(
+            "**/build/**",
+            "**/.gradle/**",
+            ".git/**",
+            ".kotlin/**",
+            ".android_home/**",
+            ".scannerwork/**",
+            "artifacts/**",
+        )
     kotlin {
-        target("**/*.kt")
-        targetExclude("**/build/**", "**/.gradle/**")
+        target(
+            fileTree(layout.projectDirectory) {
+                include("**/*.kt")
+                exclude(commonExcludes)
+            },
+        )
         ktlint()
     }
     kotlinGradle {
-        target("**/*.kts")
-        targetExclude("**/build/**", "**/.gradle/**")
+        target(
+            fileTree(layout.projectDirectory) {
+                include("**/*.kts")
+                exclude(commonExcludes)
+            },
+        )
         ktlint()
     }
     format("misc") {
-        target("**/*.md", ".gitignore")
-        targetExclude("**/build/**", "**/.gradle/**")
+        target(
+            fileTree(layout.projectDirectory) {
+                include("**/*.md", ".gitignore")
+                exclude(commonExcludes)
+            },
+        )
         trimTrailingWhitespace()
         endWithNewline()
     }
     format("xml") {
-        target("**/*.xml")
-        targetExclude("**/build/**", "**/.gradle/**", ".idea/**")
+        target(
+            fileTree(layout.projectDirectory) {
+                include("**/*.xml")
+                exclude(commonExcludes + ".idea/**")
+            },
+        )
         trimTrailingWhitespace()
         endWithNewline()
     }

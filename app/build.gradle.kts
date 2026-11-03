@@ -69,6 +69,7 @@ configurations.all {
         force(libs.bcpkix.jdk18on)
         force(libs.bcutil.jdk18on)
         force(libs.kotlin.gradle.plugin)
+        force(libs.guava)
     }
 }
 
