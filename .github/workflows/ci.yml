@@ -21,6 +21,7 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 permissions:
+  actions: read
   contents: read
   packages: write
   security-events: write
@@ -29,6 +30,7 @@ jobs:
   android-ci:
     if: github.actor != 'dependabot[bot]'
     permissions:
+      actions: read
       contents: read
       packages: write
       security-events: write
